@@ -2,10 +2,7 @@
 to do:
 -- comments, clarity, elegance
 -- change loops to new structure
--- impliment floodfill
--- make mine generation a function and call after first selection
 -- make mine generation more interesting
-
 """
 
 import random, os
@@ -84,7 +81,7 @@ class Board:
             curr_square.value = value
 
     def display(self): #prints array to the console. shows value of squares w/ .show = True (squares flagged or broke by player
-        #clear()
+        clear()
         print("  ", end="")
         for x in range(self.width):
             print(" {} ".format(str(x)), end="")
@@ -109,22 +106,22 @@ class Board:
         if not self.mined:
             self.populate(x, y)
         while True:
-            if board.array[x][y].show or board.array[x][y].flag:
+            if self.array[x][y].show or self.array[x][y].flag:
                 x = int(input("Square has already been examined. Try again.\nX-coordinate:\n"))
                 y = int(input("Y-coordinate:\n"))
                 action = input("[f]lag OR [b]reak?\n")
             else:
-                board.array[x][y].show = True
+                self.array[x][y].show = True
                 break
         if "f" in action.lower():
-            board.array[x][y].flag = True
+            self.array[x][y].flag = True
         elif "b" in action.lower():
-            if not board.array[x][y].mine:
+            if not self.array[x][y].mine:
                 self.array[x][y].show = True
-                if board.array[x][y].value == 0:
+                if self.array[x][y].value == 0:
                     flood_fill(self, x, y)
             else:
-                board.playing = False
+                self.playing = False
                 for i in range(self.width*self.height):
                     x, y = i//self.height, i%self.height
                     self.array[x][y].show = True
@@ -135,9 +132,10 @@ def run(): ## main loop ##
     width = int(input("Width?\n"))
     height = int(input("Height?\n"))
     mines = int(input("Mines?\n"))
-    global board
     board = Board(width, height, mines)
     board.display()
     while board.playing: board.examine()
-
-b = Board(3,3,0)
+    cont = input("Would you like to play again? [Y/N]\n")
+    if "y" in cont.lower(): run()
+    else: quit()
+run()
